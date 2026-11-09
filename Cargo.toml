@@ -1,0 +1,58 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/opensupport-core",
+    "crates/opensupport-crypto",
+    "crates/opensupport-input",
+    "crates/opensupport-transfer",
+    "crates/opensupport-diagnostics",
+    "crates/opensupport-audit",
+    "crates/opensupport-codec",
+    "apps/opensupport-server",
+    "apps/opensupport-service",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["OpenSupport Contributors"]
+license = "AGPL-3.0-or-later"
+
+[workspace.dependencies]
+# Concurrency & Async
+tokio = { version = "1.40", features = ["full"] }
+futures = "0.3"
+async-trait = "0.1"
+
+# Serialization & Wire Protocol
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+bincode = "1.3"
+bytes = "1.7"
+uuid = { version = "1.10", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+
+# Cryptography & Security
+ring = "0.17"
+snow = "0.9"
+chacha20poly1305 = "0.10"
+ed25519-dalek = { version = "2.1", features = ["rand_core", "serde"] }
+x25519-dalek = { version = "2.0", features = ["static_secrets"] }
+sha2 = "0.10"
+subtle = "2.6"
+rand = "0.8"
+
+# Logging & Tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Internal Crates
+opensupport-core = { path = "crates/opensupport-core" }
+opensupport-crypto = { path = "crates/opensupport-crypto" }
+opensupport-input = { path = "crates/opensupport-input" }
+opensupport-transfer = { path = "crates/opensupport-transfer" }
+opensupport-diagnostics = { path = "crates/opensupport-diagnostics" }
+opensupport-audit = { path = "crates/opensupport-audit" }
+opensupport-codec = { path = "crates/opensupport-codec" }

@@ -1,0 +1,60 @@
+name: OpenSupport DevSecOps Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  audit-and-security:
+    name: Security Scan & Vulnerability Audit
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust Stable Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Rust Security Audit (cargo-audit)
+        run: |
+          cargo install cargo-audit
+          cargo audit
+
+      - name: Code Quality & Linter (Clippy)
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: Automated Unit & Integration Tests
+        run: cargo test --workspace --verbose
+
+  build-and-package:
+    name: Build Signed Windows Binaries & SBOM
+    needs: audit-and-security
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build Release Artifacts
+        run: |
+          cargo build --release --bin opensupport-server
+          cargo build --release --bin opensupport-service
+
+      - name: Generate Software Bill of Materials (SBOM)
+        run: |
+          cargo install cargo-sbom
+          cargo sbom --output target/release/sbom.spdx.json
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: opensupport-windows-x86_64
+          path: |
+            target/release/opensupport-server.exe
+            target/release/opensupport-service.exe
+            target/release/sbom.spdx.json
+            opensupport_security.toml

@@ -1,0 +1,12 @@
+[package]
+name = "opensupport-codec"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+opensupport-core.workspace = true
+lz4_flex = "0.11"
+thiserror.workspace = true
+tracing.workspace = true
+bytes.workspace = true

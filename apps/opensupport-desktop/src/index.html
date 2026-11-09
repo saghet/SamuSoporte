@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="es" class="h-full bg-slate-950 text-slate-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenSupport - Plataforma de Asistencia Remota Segura</title>
+    <!-- Tailwind CSS CDN para renderizado profesional en desktop -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: '#f0fdf4',
+                500: '#22c55e',
+                600: '#16a34a',
+                700: '#15803d',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Estilos para estado y animaciones de seguridad */
+      .pulse-indicator {
+        animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      @keyframes pulse-glow {
+        0%, 100% { opacity: 1; }
+        50% { opacity: .4; }
+      }
+    </style>
+  </head>
+  <body class="h-full flex flex-col font-sans select-none antialiased">
+    <!-- Barra Superior / Header de Seguridad -->
+    <header class="bg-slate-900 border-b border-slate-800 px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
+          <svg class="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-base font-semibold tracking-wide text-white flex items-center gap-2">
+            OpenSupport <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono">v0.1.0 E2EE</span>
+          </h1>
+          <p class="text-xs text-slate-400">Zero Trust Architecture &bull; Noise Protocol E2EE</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <!-- Indicador de Relay -->
+        <div class="flex items-center space-x-2 text-xs text-slate-300 bg-slate-800/80 px-3 py-1.5 rounded-md border border-slate-700">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 pulse-indicator"></span>
+          <span id="relayStatus">Relay Conectado (Blind E2EE)</span>
+        </div>
+        <button id="themeToggleBtn" class="p-2 text-slate-400 hover:text-white rounded-lg bg-slate-800 hover:bg-slate-700 transition">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Cuerpo Principal con Pestañas -->
+    <div class="flex-1 flex overflow-hidden">
+      <!-- Barra lateral de navegación -->
+      <aside class="w-64 bg-slate-900/60 border-r border-slate-800 p-4 flex flex-col justify-between">
+        <nav class="space-y-1">
+          <button id="navHostBtn" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-emerald-600/10 text-emerald-400 border border-emerald-500/20 transition">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+            <span>Mi Equipo (Host)</span>
+          </button>
+          <button id="navConsoleBtn" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span>Consola Técnico</span>
+          </button>
+          <button id="navAuditBtn" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Auditoría Inmutable</span>
+          </button>
+        </nav>
+
+        <!-- Información de Dispositivo Local -->
+        <div class="bg-slate-900 border border-slate-800 p-3 rounded-lg">
+          <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold mb-1">ID Criptográfico Local</div>
+          <div id="localDeviceId" class="font-mono text-xs text-slate-200 truncate">Inicializando...</div>
+        </div>
+      </aside>
+
+      <!-- Panel de Contenido -->
+      <main class="flex-1 overflow-y-auto p-8">
+        <!-- VISTA: MI EQUIPO (HOST) -->
+        <section id="viewHost" class="space-y-6 max-w-4xl">
+          <div>
+            <h2 class="text-xl font-bold text-white">Asistencia Remota Asistida</h2>
+            <p class="text-sm text-slate-400 mt-1">Comparte tu código temporal con el técnico de soporte para otorgar control supervisado.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Tarjeta: Tu Código de Soporte -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
+              <div>
+                <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Código de Conexión</span>
+                <div class="mt-4 flex items-center justify-between bg-slate-950 p-4 rounded-lg border border-slate-800">
+                  <span id="tempAccessCode" class="font-mono text-3xl font-extrabold tracking-widest text-emerald-400">--- ---</span>
+                  <button id="copyCodeBtn" class="p-2 hover:bg-slate-800 text-slate-400 hover:text-white rounded-md transition" title="Copiar Código">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </button>
+                </div>
+                <p class="text-xs text-slate-400 mt-3">Caduca automáticamente en 15 minutos o tras finalizar la sesión.</p>
+              </div>
+
+              <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
+                <span class="text-xs text-slate-400">Estado del Host</span>
+                <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Listo para Conexión</span>
+              </div>
+            </div>
+
+            <!-- Tarjeta: Políticas de Seguridad Activas -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-6">
+              <span class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Permisos para esta Sesión</span>
+              <ul class="mt-4 space-y-3 text-sm text-slate-300">
+                <li class="flex items-center justify-between">
+                  <span>Visualizar Pantalla</span>
+                  <input type="checkbox" checked disabled class="accent-emerald-500 w-4 h-4 rounded">
+                </li>
+                <li class="flex items-center justify-between">
+                  <span>Control de Mouse y Teclado</span>
+                  <input id="permInput" type="checkbox" checked class="accent-emerald-500 w-4 h-4 rounded">
+                </li>
+                <li class="flex items-center justify-between">
+                  <span>Transferencia de Archivos</span>
+                  <input id="permFiles" type="checkbox" checked class="accent-emerald-500 w-4 h-4 rounded">
+                </li>
+                <li class="flex items-center justify-between">
+                  <span>Herramientas Administrativas</span>
+                  <input id="permDiagnostics" type="checkbox" class="accent-emerald-500 w-4 h-4 rounded">
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Banner Permanente de Sesión Remota Activa (Requisito Obligatorio) -->
+          <div id="activeSessionBanner" class="hidden bg-red-950/40 border border-red-500/50 rounded-xl p-5 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <span class="w-3.5 h-3.5 rounded-full bg-red-500 animate-ping"></span>
+              <div>
+                <h4 class="text-sm font-bold text-red-200">SESIÓN REMOTA EN CURSO</h4>
+                <p class="text-xs text-red-300/80">El técnico <span id="activeTechName" class="font-semibold text-white">tech_support@corp</span> tiene control activo.</p>
+                <div class="text-xs font-mono text-emerald-400 mt-1">SAS Anti-MitM: <span id="activeSasCode" class="font-bold underline">482-910</span></div>
+              </div>
+            </div>
+            <button id="emergencyDisconnectBtn" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-lg transition shadow-lg">
+              DETENER SESIÓN INMEDIATAMENTE
+            </button>
+          </div>
+        </section>
+
+        <!-- VISTA: CONSOLA DEL TÉCNICO -->
+        <section id="viewConsole" class="hidden space-y-6 max-w-5xl">
+          <div>
+            <h2 class="text-xl font-bold text-white">Consola de Asistencia Técnica</h2>
+            <p class="text-sm text-slate-400 mt-1">Conéctate a un host remoto introduciendo su código de sesión o Device ID.</p>
+          </div>
+
+          <!-- Barra de Conexión -->
+          <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center space-x-3">
+            <input id="targetCodeInput" type="text" placeholder="Introduce el Código o Device ID..." class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+            <button id="connectTargetBtn" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm rounded-lg transition flex items-center space-x-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+              <span>Conectar</span>
+            </button>
+          </div>
+
+          <!-- Pestañas de la Consola Técnica (Escritorio, Diagnóstico, Archivos) -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="border-b border-slate-800 px-6 py-3 flex space-x-6 text-sm">
+              <button class="text-emerald-400 font-semibold border-b-2 border-emerald-400 pb-2">Escritorio Remoto</button>
+              <button class="text-slate-400 hover:text-white pb-2">Caja de Herramientas (Procesos / HW)</button>
+              <button class="text-slate-400 hover:text-white pb-2">Transferencia de Archivos</button>
+            </div>
+
+            <div class="p-8 flex flex-col items-center justify-center min-h-[350px] bg-slate-950">
+              <div class="text-center space-y-3">
+                <div class="w-16 h-16 mx-auto rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500">
+                  <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div class="text-sm font-medium text-slate-300">No hay una sesión remota activa</div>
+                <p class="text-xs text-slate-500 max-w-sm">Introduce el código temporal provisto por el usuario remoto para iniciar el túnel cifrado E2EE con Noise Protocol.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VISTA: AUDITORÍA INMUTABLE -->
+        <section id="viewAudit" class="hidden space-y-6 max-w-5xl">
+          <div>
+            <h2 class="text-xl font-bold text-white">Registro Criptográfico de Auditoría</h2>
+            <p class="text-sm text-slate-400 mt-1">Bitácora de eventos con cadena de hashes SHA-256 a prueba de manipulaciones.</p>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950/80 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                <tr>
+                  <th class="px-4 py-3"># Seq</th>
+                  <th class="px-4 py-3">Fecha / Hora</th>
+                  <th class="px-4 py-3">Evento</th>
+                  <th class="px-4 py-3">Técnico / Origen</th>
+                  <th class="px-4 py-3">Hash de Integridad</th>
+                </tr>
+              </thead>
+              <tbody id="auditTableBody" class="divide-y divide-slate-800">
+                <!-- Se poblará dinámicamente con los registros reales -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Script de Gestión e Integración -->
+    <script>
+      // Navegación de Pestañas
+      const navHostBtn = document.getElementById('navHostBtn');
+      const navConsoleBtn = document.getElementById('navConsoleBtn');
+      const navAuditBtn = document.getElementById('navAuditBtn');
+
+      const viewHost = document.getElementById('viewHost');
+      const viewConsole = document.getElementById('viewConsole');
+      const viewAudit = document.getElementById('viewAudit');
+
+      function switchTab(activeBtn, activeView) {
+        [navHostBtn, navConsoleBtn, navAuditBtn].forEach(b => {
+          b.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition";
+        });
+        activeBtn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-emerald-600/10 text-emerald-400 border border-emerald-500/20 transition";
+
+        [viewHost, viewConsole, viewAudit].forEach(v => v.classList.add('hidden'));
+        activeView.classList.remove('hidden');
+      }
+
+      navHostBtn.addEventListener('click', () => switchTab(navHostBtn, viewHost));
+      navConsoleBtn.addEventListener('click', () => switchTab(navConsoleBtn, viewConsole));
+      navAuditBtn.addEventListener('click', () => switchTab(navAuditBtn, viewAudit));
+
+      // Generar código numérico simulado para visualización local
+      const code = Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('tempAccessCode').innerText = `${code.toString().slice(0,3)} ${code.toString().slice(3)}`;
+
+      // Poblar tabla de auditoría con la cadena de hashes
+      const sampleEvents = [
+        { seq: 1, time: new Date().toISOString(), type: "SessionStarted", tech: "tech_operador@empresa.com", hash: "a4f8...91bc" },
+        { seq: 2, time: new Date().toISOString(), type: "PermissionsGranted", tech: "tech_operador@empresa.com", hash: "7c12...88df" },
+        { seq: 3, time: new Date().toISOString(), type: "FileTransferStarted", tech: "tech_operador@empresa.com", hash: "3e9b...110a" }
+      ];
+
+      const tbody = document.getElementById('auditTableBody');
+      sampleEvents.forEach(e => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-800/40 transition";
+        tr.innerHTML = `
+          <td class="px-4 py-3 font-mono text-emerald-400 font-bold">${e.seq}</td>
+          <td class="px-4 py-3">${e.time}</td>
+          <td class="px-4 py-3"><span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200">${e.type}</span></td>
+          <td class="px-4 py-3">${e.tech}</td>
+          <td class="px-4 py-3 font-mono text-slate-500">${e.hash}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    </script>
+  </body>
+</html>
