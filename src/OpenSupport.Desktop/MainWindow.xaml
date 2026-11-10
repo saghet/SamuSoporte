@@ -6,10 +6,12 @@
         xmlns:ui="clr-namespace:Wpf.Ui.Controls;assembly=Wpf.Ui"
         xmlns:uim="clr-namespace:Wpf.Ui.Markup;assembly=Wpf.Ui"
         mc:Ignorable="d"
-        Title="OpenSupport - Asistencia Remota Nativa Windows" 
+        Title="SamuSoporte - Asistencia Remota Nativa" 
         Height="720" Width="1100"
         WindowStartupLocation="CenterScreen"
-        WindowBackdropType="Mica">
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        Icon="AppIcon.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -19,7 +21,7 @@
         <!-- Barra de Título Fluent -->
         <ui:TitleBar
             Grid.Row="0"
-            Title="OpenSupport • E2EE Zero Trust Native"
+            Title="SamuSoporte • E2EE Zero Trust Native"
             Height="42" />
 
         <!-- Layout con Barra Lateral y Contenido -->
