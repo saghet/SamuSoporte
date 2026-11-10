@@ -1,0 +1,163 @@
+<ui:FluentWindow x:Class="OpenSupport.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="clr-namespace:Wpf.Ui.Controls;assembly=Wpf.Ui"
+        xmlns:uim="clr-namespace:Wpf.Ui.Markup;assembly=Wpf.Ui"
+        mc:Ignorable="d"
+        Title="OpenSupport - Asistencia Remota Nativa Windows" 
+        Height="720" Width="1100"
+        WindowStartupLocation="CenterScreen"
+        WindowBackdropType="Mica">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Barra de Título Fluent -->
+        <ui:TitleBar
+            Grid.Row="0"
+            Title="OpenSupport • E2EE Zero Trust Native"
+            Height="42" />
+
+        <!-- Layout con Barra Lateral y Contenido -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Barra Lateral Nativa Fluent -->
+            <Border Grid.Column="0" Background="#0b1329" BorderBrush="#1e293b" BorderThickness="0,0,1,0" Padding="12,16">
+                <DockPanel>
+                    <!-- Menú Inferior -->
+                    <StackPanel DockPanel.Dock="Bottom" Margin="0,16,0,0">
+                        <ui:Button Icon="{uim:SymbolIcon Symbol=Settings24}" Content="Configuración" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Appearance="Transparent" Margin="0,2" />
+                    </StackPanel>
+
+                    <!-- Lista de Navegación Principal -->
+                    <StackPanel>
+                        <ui:Button Icon="{uim:SymbolIcon Symbol=Home24}" Content="Panel Principal" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Appearance="Primary" Margin="0,3" />
+                        <ui:Button Icon="{uim:SymbolIcon Symbol=Desktop24}" Content="Soporte Remoto" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Appearance="Transparent" Margin="0,3" />
+                        <ui:Button Icon="{uim:SymbolIcon Symbol=Laptop24}" Content="Mis Dispositivos" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Appearance="Transparent" Margin="0,3" />
+                        <ui:Button Icon="{uim:SymbolIcon Symbol=Wrench24}" Content="Consola Técnico" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Appearance="Transparent" Margin="0,3" />
+                        <ui:Button Icon="{uim:SymbolIcon Symbol=Shield24}" Content="Seguridad &amp; Zero Trust" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Appearance="Transparent" Margin="0,3" />
+                        <ui:Button Icon="{uim:SymbolIcon Symbol=DocumentBulletList24}" Content="Auditoría Inmutable" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Appearance="Transparent" Margin="0,3" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Contenido Principal: Panel Principal -->
+            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Margin="32" MaxWidth="960" HorizontalAlignment="Left">
+                    <!-- Encabezado -->
+                    <TextBlock Text="Panel Principal de Asistencia" FontSize="26" FontWeight="Bold" Foreground="#f8fafc" />
+                    <TextBlock Text="Control remoto asistido y supervisado con cifrado Noise Protocol E2EE y arquitectura Zero Trust." Margin="0,4,0,20" Foreground="#94a3b8" />
+
+                    <!-- Alerta de Conexión Relay -->
+                    <ui:InfoBar
+                        IsOpen="True"
+                        IsClosable="False"
+                        Severity="Success"
+                        Title="Servidor de Relay Conectado"
+                        Message="Túnel Zero-Knowledge listo. El servidor de tránsito no posee capacidad de inspección de datos."
+                        Margin="0,0,0,20" />
+
+                    <!-- Banner de Sesión Activa (Permanente y No Ocultable durante sesión) -->
+                    <Border x:Name="ActiveSessionCard" Visibility="Collapsed" Background="#3b0764" BorderBrush="#a855f7" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,20">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ui:SymbolIcon Symbol="Warning24" FontSize="28" Foreground="#e879f9" Margin="0,0,16,0" VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="SESIÓN REMOTA ACTIVA SUPERVISADA" FontWeight="Bold" Foreground="#f5d0fe" />
+                                <TextBlock x:Name="ActiveSessionText" Text="Un operador autorizado tiene control de este equipo." Foreground="#e9d5ff" />
+                                <TextBlock x:Name="SasCodeText" Text="SAS Anti-MitM: 482 910" FontWeight="SemiBold" Foreground="#38bdf8" Margin="0,4,0,0" />
+                            </StackPanel>
+                            <ui:Button x:Name="EmergencyStopBtn" Grid.Column="2" Appearance="Danger" Content="DETENER SESIÓN INMEDIATAMENTE" Click="EmergencyStopBtn_Click" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Sección de Tarjetas Principales -->
+                    <Grid Margin="0,0,0,24">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Tarjeta 1: Mi Código de Asistencia -->
+                        <Border Grid.Column="0" Background="#0f172a" BorderBrush="#1e293b" BorderThickness="1" CornerRadius="8" Padding="20">
+                            <StackPanel>
+                                <TextBlock Text="Permitir Control Asistido" FontSize="18" FontWeight="SemiBold" Foreground="#38bdf8" />
+                                <TextBlock Text="Comparte este código temporal con tu técnico autorizado para otorgarle acceso supervisado." Margin="0,6,0,16" TextWrapping="Wrap" Foreground="#94a3b8" />
+
+                                <Border Background="#020617" BorderBrush="#334155" BorderThickness="1" CornerRadius="6" Padding="16" Margin="0,0,0,12">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock x:Name="TempCodeBlock" Text="582 914" FontSize="34" FontFamily="Consolas" FontWeight="Bold" Foreground="#4ade80" VerticalAlignment="Center" />
+                                        <ui:Button x:Name="CopyCodeBtn" Grid.Column="1" Icon="{uim:SymbolIcon Symbol=Copy24}" Click="CopyCodeBtn_Click" ToolTip="Copiar Código" />
+                                    </Grid>
+                                </Border>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:Button x:Name="RegenCodeBtn" Content="Regenerar Código" Click="RegenCodeBtn_Click" />
+                                    <TextBlock Text="Caduca en 15 min" Margin="12,0,0,0" VerticalAlignment="Center" Foreground="#64748b" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Tarjeta 2: Conectar a Equipo Remoto -->
+                        <Border Grid.Column="2" Background="#0f172a" BorderBrush="#1e293b" BorderThickness="1" CornerRadius="8" Padding="20">
+                            <StackPanel>
+                                <TextBlock Text="Conectar a un Equipo Remoto" FontSize="18" FontWeight="SemiBold" Foreground="#38bdf8" />
+                                <TextBlock Text="Introduce el código de soporte de 6 dígitos o Device ID del equipo al que brindarás asistencia." Margin="0,6,0,16" TextWrapping="Wrap" Foreground="#94a3b8" />
+
+                                <ui:TextBox x:Name="TargetInput" PlaceholderText="Ej: 582 914 o DeviceID..." FontSize="16" Margin="0,0,0,16" />
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:Button x:Name="ConnectBtn" Grid.Column="0" Appearance="Primary" Content="Iniciar Asistencia Remota" Click="ConnectBtn_Click" HorizontalAlignment="Stretch" />
+                                    <ui:Button x:Name="FileTransferBtn" Grid.Column="2" Content="Sólo Archivos" Click="FileTransferBtn_Click" />
+                                </Grid>
+
+                                <TextBlock x:Name="StatusLabel" Margin="0,10,0,0" Foreground="#38bdf8" FontSize="13" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Lista de Equipos Recientes -->
+                    <Border Background="#0f172a" BorderBrush="#1e293b" BorderThickness="1" CornerRadius="8" Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="Historial de Conexiones Recientes" FontSize="16" FontWeight="SemiBold" Foreground="#f8fafc" Margin="0,0,0,12" />
+                            <Border Background="#020617" BorderBrush="#1e293b" BorderThickness="1" CornerRadius="6" Padding="12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="160" />
+                                        <ColumnDefinition Width="120" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="DESKTOP-FINANZAS-01 (Windows 11 Pro)" VerticalAlignment="Center" Foreground="#cbd5e1" />
+                                    <TextBlock Grid.Column="1" Text="Hace 2 horas" VerticalAlignment="Center" Foreground="#64748b" />
+                                    <ui:Button Grid.Column="2" Content="Reconectar" HorizontalAlignment="Right" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>

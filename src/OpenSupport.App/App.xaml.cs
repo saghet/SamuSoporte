@@ -18,21 +18,22 @@ public partial class App : Application
     private Window? _window;
     
     /// <summary>
-    /// Initializes the singleton application object.
+    /// Initializes the singleton application object.  This is the first line of authored code
+    /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
     {
-        UnhandledException += (s, e) =>
-        {
-            System.IO.File.WriteAllText("crash_unhandled.txt", $"{e.Message}\n{e.Exception}");
-        };
-
-        AppDomain.CurrentDomain.UnhandledException += (s, e) =>
-        {
-            System.IO.File.WriteAllText("crash_appdomain.txt", $"{e.ExceptionObject}");
-        };
-
+        UnhandledException += App_UnhandledException;
         InitializeComponent();
+    }
+
+    private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+    {
+        try
+        {
+            System.IO.File.WriteAllText("crash_log.txt", $"{DateTime.Now}: {e.Message}\n{e.Exception}\n{e.Exception.StackTrace}");
+        }
+        catch { }
     }
 
     /// <summary>
@@ -41,18 +42,7 @@ public partial class App : Application
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        try
-        {
-            System.IO.File.AppendAllText("launch_log.txt", $"[1] OnLaunched invoked at {DateTime.Now}\n");
-            _window = new MainWindow();
-            System.IO.File.AppendAllText("launch_log.txt", "[2] MainWindow instantiated\n");
-            _window.Activate();
-            System.IO.File.AppendAllText("launch_log.txt", "[3] MainWindow activated\n");
-        }
-        catch (Exception ex)
-        {
-            System.IO.File.WriteAllText("launch_error.txt", ex.ToString());
-            throw;
-        }
+        _window = new MainWindow();
+        _window.Activate();
     }
 }
