@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="OpenSupport_App.Pages.AuditPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer Padding="28">
+        <StackPanel Spacing="24" MaxWidth="1000" HorizontalAlignment="Left">
+            <StackPanel Spacing="4">
+                <TextBlock Text="Registro Inmutable de Auditoría" Style="{ThemeResource TitleTextBlockStyle}" FontWeight="Bold" />
+                <TextBlock Text="Cadena criptográfica de eventos protegida contra alteraciones (Tamper-evident Audit Ledger)." Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox PlaceholderText="Filtrar por evento, técnico o IP..." />
+                <Button Grid.Column="1" Content="Verificar Integridad de Cadena" />
+                <Button Grid.Column="2" Content="Exportar JSON / Syslog" Style="{ThemeResource AccentButtonStyle}" />
+            </Grid>
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="16">
+                <StackPanel Spacing="8">
+                    <Grid Padding="8,4" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="180" />
+                            <ColumnDefinition Width="180" />
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="# Seq" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="Fecha y Hora" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="2" Text="Tipo de Evento" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="3" Text="Identidad Técnico" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="4" Text="Hash SHA-256" FontWeight="SemiBold" />
+                    </Grid>
+
+                    <ListView SelectionMode="None">
+                        <ListViewItem>
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="180" />
+                                    <ColumnDefinition Width="180" />
+                                    <ColumnDefinition Width="200" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="001" FontFamily="Consolas" FontWeight="Bold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="2026-11-09 18:30:15" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="2" Text="SessionStarted" FontWeight="Medium" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="3" Text="tech_operador@empresa.com" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="4" Text="4a78b9...c310ef" FontFamily="Consolas" Foreground="{ThemeResource TextFillColorTertiaryBrush}" VerticalAlignment="Center" />
+                            </Grid>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="180" />
+                                    <ColumnDefinition Width="180" />
+                                    <ColumnDefinition Width="200" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="002" FontFamily="Consolas" FontWeight="Bold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="2026-11-09 18:30:16" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="2" Text="PermissionsGranted" FontWeight="Medium" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="3" Text="tech_operador@empresa.com" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="4" Text="8f12a0...e456ba" FontFamily="Consolas" Foreground="{ThemeResource TextFillColorTertiaryBrush}" VerticalAlignment="Center" />
+                            </Grid>
+                        </ListViewItem>
+                    </ListView>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OpenSupport.App/OpenSupport.App.csproj" />
+    <Project Path="src/OpenSupport.Service/OpenSupport.Service.csproj" />
+  </Folder>
+</Solution>

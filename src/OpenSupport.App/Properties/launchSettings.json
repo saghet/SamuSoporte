@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "OpenSupport.App (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "OpenSupport.App (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

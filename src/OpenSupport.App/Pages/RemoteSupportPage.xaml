@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="OpenSupport_App.Pages.RemoteSupportPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid RowSpacing="12" Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Barra de herramientas de soporte remoto -->
+        <Border
+            Grid.Row="0"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Padding="8">
+            <CommandBar DefaultLabelPosition="Right" Background="Transparent">
+                <AppBarButton Icon="Play" Label="Control Entrada" />
+                <AppBarButton Icon="Sync" Label="Portapapeles" />
+                <AppBarButton Icon="Save" Label="Transferir Archivos" />
+                <AppBarButton Icon="ViewAll" Label="Monitores" />
+                <AppBarSeparator />
+                <AppBarButton Icon="Setting" Label="Calidad / FPS" />
+                <AppBarButton Icon="Cancel" Label="Desconectar" Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
+            </CommandBar>
+        </Border>
+
+        <!-- Superficie de Pantalla Remota Nativa -->
+        <Border
+            Grid.Row="1"
+            Background="#020617"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+            <Grid>
+                <TextBlock
+                    Text="Superficie de Renderizado DirectX / WGC&#x0a;No hay transmisión de pantalla activa."
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    TextAlignment="Center"
+                    Foreground="#64748b" />
+            </Grid>
+        </Border>
+
+        <!-- Barra de Estado de Telemetría -->
+        <Grid Grid.Row="2" ColumnSpacing="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Estado: Esperando sesión" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            <TextBlock Grid.Column="1" Text="Latencia: 0 ms" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            <TextBlock Grid.Column="2" Text="Ancho de Banda: 0 KB/s" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            <TextBlock Grid.Column="3" Text="Códec: LZ4 Differential" VerticalAlignment="Center" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+        </Grid>
+    </Grid>
+</Page>
