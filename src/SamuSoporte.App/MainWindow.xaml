@@ -1,0 +1,257 @@
+<Window x:Class="SamuSoporte.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="SamuSoporte - Asistencia Remota Profesional"
+        Height="740" Width="1100"
+        MinHeight="620" MinWidth="880"
+        WindowStartupLocation="CenterScreen"
+        Icon="AppIcon.ico"
+        Background="#0f172a">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Barra Superior con Avatar de Marca SamuSoporte -->
+        <Border Grid.Row="0" Background="#1e293b" Padding="16,10" BorderBrush="#334155" BorderThickness="0,0,0,1">
+            <Grid>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="34" Height="34" CornerRadius="17" Margin="0,0,12,0" ClipToBounds="True" BorderBrush="#10b981" BorderThickness="2">
+                        <Image Source="Square150x150Logo.scale-200.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="SamuSoporte" FontSize="16" FontWeight="Bold" Foreground="White" />
+                            <Border Background="#10b981" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                <TextBlock Text="E2EE Zero Trust" FontSize="10" Foreground="White" FontWeight="Bold" />
+                            </Border>
+                        </StackPanel>
+                        <TextBlock Text="Control Remoto Profesional y Seguro" FontSize="11" Foreground="#94a3b8" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Border Background="#064e3b" CornerRadius="12" Padding="12,4" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="8" Height="8" Fill="#10b981" Margin="0,0,6,0" />
+                            <TextBlock Text="Relay Seguro Activo" FontSize="11" Foreground="#6ee7b7" FontWeight="SemiBold" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Navegación Lateral y Contenido Principal -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Menú Lateral -->
+            <Border Grid.Column="0" Background="#111827" BorderBrush="#1f2937" BorderThickness="0,0,1,0" Padding="12,16">
+                <StackPanel>
+                    <Button x:Name="BtnNavHome" Content="🏠  Panel Principal" Click="NavHome_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="12,10" Margin="0,0,0,6" Background="#1e293b" Foreground="#10b981" FontWeight="SemiBold" BorderThickness="0" />
+                    <Button x:Name="BtnNavRemote" Content="🖥️  Soporte Remoto" Click="NavRemote_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="12,10" Margin="0,0,0,6" Background="Transparent" Foreground="#94a3b8" BorderThickness="0" />
+                    <Button x:Name="BtnNavDevices" Content="💻  Mis Dispositivos" Click="NavDevices_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="12,10" Margin="0,0,0,6" Background="Transparent" Foreground="#94a3b8" BorderThickness="0" />
+                    <Button x:Name="BtnNavConsole" Content="🛠️  Consola Técnico" Click="NavConsole_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="12,10" Margin="0,0,0,6" Background="Transparent" Foreground="#94a3b8" BorderThickness="0" />
+                    <Button x:Name="BtnNavSecurity" Content="🛡️  Seguridad &amp; Zero Trust" Click="NavSecurity_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="12,10" Margin="0,0,0,6" Background="Transparent" Foreground="#94a3b8" BorderThickness="0" />
+                    <Button x:Name="BtnNavAudit" Content="📜  Auditoría Inmutable" Click="NavAudit_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="12,10" Margin="0,0,0,6" Background="Transparent" Foreground="#94a3b8" BorderThickness="0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Área de Vistas Dinámicas -->
+            <Grid Grid.Column="1" Margin="24">
+                <!-- VISTA 1: PANEL PRINCIPAL (HOME) -->
+                <ScrollViewer x:Name="ViewHome" VerticalScrollBarVisibility="Auto">
+                    <StackPanel MaxWidth="850" HorizontalAlignment="Left">
+                        <!-- Banner Superior de Identidad de Marca SamuSoporte -->
+                        <Border Background="#1e293b" CornerRadius="12" Padding="20" Margin="0,0,0,20" BorderBrush="#334155" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Avatar de Samu con anillo de seguridad esmeralda -->
+                                <Border Width="76" Height="76" CornerRadius="38" BorderBrush="#10b981" BorderThickness="3" ClipToBounds="True">
+                                    <Image Source="Square150x150Logo.scale-200.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                                </Border>
+
+                                <StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="SamuSoporte" FontSize="24" FontWeight="Bold" Foreground="White" />
+                                        <TextBlock Text="v1.0 Nativo Windows" FontSize="12" Foreground="#10b981" Margin="10,8,0,0" FontWeight="SemiBold" />
+                                    </StackPanel>
+                                    <TextBlock Text="La alternativa nativa profesional: Cifrado E2EE con Noise Protocol, códec diferencial ultrarrápido y control UAC." FontSize="13" Foreground="#94a3b8" Margin="0,4,0,0" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!-- Banner Crítico de Sesión Remota Activa (Obligatorio) -->
+                        <Border x:Name="ActiveSessionBanner" Visibility="Collapsed" Background="#450a0a" BorderBrush="#ef4444" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,20">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="● SESIÓN REMOTA EN CURSO" FontWeight="Bold" Foreground="#f87171" FontSize="14" />
+                                    <TextBlock x:Name="ActiveSessionText" Text="Un técnico autorizado está asistiendo este equipo activamente." Foreground="#fca5a5" FontSize="12" Margin="0,2,0,0" />
+                                    <TextBlock x:Name="ActiveSasText" Text="SAS Anti-MitM: 582-914 (Verificado)" Foreground="#34d399" FontSize="12" FontWeight="SemiBold" Margin="0,4,0,0" />
+                                </StackPanel>
+                                <Button Content="DETENER SESIÓN INMEDIATAMENTE" Click="BtnEmergencyStop_Click" Background="#dc2626" Foreground="White" FontWeight="Bold" Padding="12,8" BorderThickness="0" VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Tarjetas de Conexión y Código Temporal -->
+                        <Grid Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="16" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Permitir Asistencia (Mi Código) -->
+                            <Border Grid.Column="0" Background="#1e293b" CornerRadius="12" Padding="20" BorderBrush="#334155" BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="Permitir Asistencia Remota" FontSize="16" FontWeight="SemiBold" Foreground="White" />
+                                    <TextBlock Text="Comparte este código de 6 dígitos con el técnico autorizado para permitirle control supervisado." FontSize="12" Foreground="#94a3b8" TextWrapping="Wrap" Margin="0,4,0,16" />
+
+                                    <Border Background="#0f172a" CornerRadius="8" Padding="16" Margin="0,0,0,12" BorderBrush="#334155" BorderThickness="1">
+                                        <Grid>
+                                            <TextBlock x:Name="TxtMyCode" Text="738 419" FontSize="36" FontFamily="Consolas" FontWeight="Bold" Foreground="#10b981" VerticalAlignment="Center" />
+                                            <Button Content="Copiar" HorizontalAlignment="Right" Click="BtnCopyCode_Click" Background="#334155" Foreground="White" Padding="12,6" BorderThickness="0" />
+                                        </Grid>
+                                    </Border>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="Regenerar Código" Click="BtnRegenCode_Click" Background="#334155" Foreground="White" Padding="10,6" BorderThickness="0" />
+                                        <TextBlock Text="Caduca en 15 min" FontSize="11" Foreground="#64748b" VerticalAlignment="Center" Margin="12,0,0,0" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Conectar a Host Remoto -->
+                            <Border Grid.Column="2" Background="#1e293b" CornerRadius="12" Padding="20" BorderBrush="#334155" BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="Conectar a un Equipo Remoto" FontSize="16" FontWeight="SemiBold" Foreground="White" />
+                                    <TextBlock Text="Introduce el código de 6 dígitos o Device ID del equipo que vas a diagnosticar o asistir." FontSize="12" Foreground="#94a3b8" TextWrapping="Wrap" Margin="0,4,0,16" />
+
+                                    <TextBox x:Name="TxtTargetId" Text="" FontSize="16" Margin="0,0,0,16" FontFamily="Consolas" Background="#0f172a" Foreground="White" BorderBrush="#334155" Padding="10,8" />
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="8" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Content="Iniciar Asistencia" Click="BtnConnect_Click" Background="#10b981" Foreground="White" FontWeight="Bold" Padding="12,8" BorderThickness="0" />
+                                        <Button Grid.Column="2" Content="Sólo Archivos" Click="BtnFilesOnly_Click" Background="#334155" Foreground="White" Padding="10,8" BorderThickness="0" />
+                                    </Grid>
+                                    <TextBlock x:Name="TxtStatusFeedback" FontSize="11" Foreground="#94a3b8" Margin="0,8,0,0" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <!-- Registro de Equipos Recientes -->
+                        <Border Background="#1e293b" CornerRadius="12" Padding="20" BorderBrush="#334155" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="Conexiones Recientes y Dispositivos de Confianza" FontSize="15" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,12" />
+                                <Border Background="#0f172a" CornerRadius="8" Padding="12" Margin="0,0,0,8">
+                                    <Grid>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="💻" FontSize="20" Margin="0,0,12,0" VerticalAlignment="Center" />
+                                            <StackPanel>
+                                                <TextBlock Text="OFICINA-CENTRAL-01" FontWeight="Medium" Foreground="White" />
+                                                <TextBlock Text="Windows 11 Pro &bull; Última conexión hoy 18:20 &bull; E2EE Verificado" FontSize="11" Foreground="#94a3b8" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <Button Content="Reconectar" HorizontalAlignment="Right" Click="BtnQuickReconnect_Click" Background="#334155" Foreground="White" Padding="12,6" BorderThickness="0" />
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- VISTA 2: SOPORTE REMOTO (SUPERFICIE DE PANTALLA) -->
+                <Grid x:Name="ViewRemote" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Background="#1e293b" CornerRadius="8" Padding="8" Margin="0,0,0,12">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="🎮 Control Teclado/Mouse" Background="#334155" Foreground="White" Padding="10,6" Margin="0,0,8,0" BorderThickness="0" />
+                            <Button Content="📋 Portapapeles" Background="#334155" Foreground="White" Padding="10,6" Margin="0,0,8,0" BorderThickness="0" />
+                            <Button Content="📁 Transferir Archivos" Background="#334155" Foreground="White" Padding="10,6" Margin="0,0,8,0" BorderThickness="0" />
+                            <Button Content="🖥️ Monitores (1/2)" Background="#334155" Foreground="White" Padding="10,6" Margin="0,0,8,0" BorderThickness="0" />
+                            <Button Content="✖ Finalizar Conexión" Background="#dc2626" Foreground="White" FontWeight="Bold" Padding="10,6" BorderThickness="0" Click="BtnEndRemote_Click" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Background="#020617" CornerRadius="8" BorderBrush="#334155" BorderThickness="1">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="🖥️" FontSize="48" HorizontalAlignment="Center" />
+                            <TextBlock Text="Superficie de Renderizado de Pantalla Remota DirectX / WGC" Foreground="#94a3b8" Margin="0,12,0,4" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" />
+                            <TextBlock Text="Túnel E2EE listo &bull; Códec diferencial LZ4 &bull; 60 FPS" Foreground="#64748b" FontSize="12" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <Grid Grid.Row="2" Margin="0,12,0,0">
+                        <TextBlock Text="Latencia: 8 ms &bull; FPS: 60 &bull; Ancho de banda: 120 KB/s &bull; Cifrado: ChaCha20-Poly1305" Foreground="#94a3b8" FontSize="12" />
+                    </Grid>
+                </Grid>
+
+                <!-- VISTA 3: MIS DISPOSITIVOS -->
+                <Grid x:Name="ViewDevices" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="Inventario de Dispositivos Registrados" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,16" />
+                        <Border Background="#1e293b" CornerRadius="8" Padding="16">
+                            <TextBlock Text="Dispositivos vinculados a tu cuenta SamuSoporte con acceso desatendido autorizado." Foreground="#94a3b8" />
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <!-- VISTA 4: CONSOLA TÉCNICO -->
+                <Grid x:Name="ViewConsole" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="Caja de Herramientas y Diagnóstico del Técnico" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,16" />
+                        <Border Background="#1e293b" CornerRadius="8" Padding="16">
+                            <TextBlock Text="Telemetría en tiempo real: CPU, RAM, Almacenamiento, Procesos y Diagnóstico de Red." Foreground="#94a3b8" />
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <!-- VISTA 5: SEGURIDAD -->
+                <Grid x:Name="ViewSecurity" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="Centro de Seguridad y Parámetros Zero Trust" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,16" />
+                        <Border Background="#1e293b" CornerRadius="8" Padding="16">
+                            <TextBlock Text="Gestión de identidades criptográficas Ed25519, MFA y auditoría inmutable." Foreground="#94a3b8" />
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <!-- VISTA 6: AUDITORÍA -->
+                <Grid x:Name="ViewAudit" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="Bitácora Inmutable de Auditoría (Ledger Criptográfico)" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,16" />
+                        <Border Background="#1e293b" CornerRadius="8" Padding="16">
+                            <TextBlock Text="Historial de eventos con hashes SHA-256 encadenados a prueba de manipulación." Foreground="#94a3b8" />
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

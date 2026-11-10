@@ -10,8 +10,21 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        ExtendsContentIntoTitleBar = true;
-        SetTitleBar(AppTitleBar);
+        try
+        {
+            ExtendsContentIntoTitleBar = true;
+            SetTitleBar(AppTitleBar);
+        }
+        catch (Exception ex)
+        {
+            System.IO.File.WriteAllText("titlebar_err.txt", ex.ToString());
+        }
+
+        Closed += (s, e) =>
+        {
+            System.IO.File.AppendAllText("launch_log.txt", $"[Closed] Window closed at {DateTime.Now}\n");
+        };
+
         NavFrame.Navigate(typeof(HomePage));
     }
 
