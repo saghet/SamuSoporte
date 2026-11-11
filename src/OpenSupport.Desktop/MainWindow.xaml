@@ -362,7 +362,7 @@
                                 <TextBlock Text="Herramientas del Sistema Remoto" FontSize="16" FontWeight="SemiBold" Foreground="#f8fafc" Margin="0,0,0,16" />
                                 <WrapPanel>
                                     <ui:Button Icon="{uim:SymbolIcon Symbol=DeveloperBoard24}" Content="Administrador de Tareas" Margin="0,0,10,10" Click="ActionFeedback_Click" Tag="Consultando lista de procesos a través del motor Rust." />
-                                    <ui:Button Icon="{uim:SymbolIcon Symbol=Service24}" Content="Servicios Windows" Margin="0,0,10,10" Click="ActionFeedback_Click" Tag="Recuperando estado de servicios locales autorizados." />
+                                    <ui:Button Icon="{uim:SymbolIcon Symbol=Server24}" Content="Servicios Windows" Margin="0,0,10,10" Click="ActionFeedback_Click" Tag="Recuperando estado de servicios locales autorizados." />
                                     <ui:Button Icon="{uim:SymbolIcon Symbol=WindowDevTools24}" Content="Visor de Sucesos (EventLog)" Margin="0,0,10,10" Click="ActionFeedback_Click" Tag="Filtrando eventos de advertencia y error del sistema." />
                                     <ui:Button Icon="{uim:SymbolIcon Symbol=ArrowDownload24}" Content="Actualizaciones de Windows" Margin="0,0,10,10" Click="ActionFeedback_Click" Tag="Verificando estado de parches KB y actualizaciones." />
                                 </WrapPanel>
