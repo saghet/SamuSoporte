@@ -1,0 +1,70 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+publish/
+
+# Rust / Cargo
+target/
+**/*.rs.bk
+Cargo.lock
+
+# Visual Studio / Visual Studio Code
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.userprefs
+*.dbmdl
+*.jfm
+
+# Windows Temporary / Caches
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Dotnet & C# specific
+*.VisualState.xml
+TestResult*
+[Tt]est[Rr]esults/
+*.coverage
+*.coveragexml
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Environment and sensitive secrets
+*.env
+*.env.*
+*.key
+*.pem
+*.pfx
+*.p12
+secrets.json
+appsettings.Production.json
+appsettings.Development.json
+*.token
+
+# Scripts and scratch files
+check_proc.ps1
+check_shortcuts.ps1
+debug_crash.ps1
+test_launch.ps1
