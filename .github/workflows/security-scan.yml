@@ -1,0 +1,24 @@
+name: Security Audit & Analysis
+
+on:
+  push:
+    branches: [ main, 'release/**' ]
+  schedule:
+    - cron: '0 4 * * 1' # Every Monday at 04:00 UTC
+
+jobs:
+  security-audit:
+    name: Security Scans & Dependencies
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit --locked
+
+      - name: Audit Cargo Dependencies
+        run: cargo audit

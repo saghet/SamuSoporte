@@ -1,0 +1,41 @@
+name: Bug Report
+description: File a bug report to help improve SamuSoporte
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report an issue! Please provide as much technical context as possible.
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the behavior.
+      placeholder: |
+        1. Open SamuSoporte
+        2. Click on 'Soporte Remoto'
+        3. Enter code '...'
+        4. See error
+    validations:
+      required: true
+  - type: input
+    id: windows-version
+    attributes:
+      label: Windows Version & Architecture
+      placeholder: Windows 11 Pro 24H2 (x64)
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs or Crash Output
+      description: Paste any logs from Event Viewer, terminal output, or stack traces.
+      render: shell

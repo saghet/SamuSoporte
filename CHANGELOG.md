@@ -1,25 +1,35 @@
-# REGISTRO DE CAMBIOS (CHANGELOG.md)
+# Changelog
 
-Todas las modificaciones notables de OpenSupport se documentan en este archivo.
+All notable changes to this project will be documented in this file.
 
-## [0.2.0-native-alpha] - 2026-11-09
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### Agregado
-- **Migración a Aplicación Nativa Windows:**
-  - Nueva solución `OpenSupport.slnx` con .NET 10 LTS y Windows App SDK.
-  - Implementación de `OpenSupport.App` con **WinUI 3**, material *Mica*, modo oscuro/claro y controles nativos de Fluent Design.
-  - Creación de vistas nativas completas:
-    - `HomePage`: Generador de código temporal asistido de 6 dígitos, conexión a target y **Banner permanente de sesión activa** con parada de emergencia.
-    - `RemoteSupportPage`: Superficie de renderizado de pantalla remota y CommandBar de control.
-    - `DevicesPage`: Gestión de equipos registrados y estados en línea.
-    - `TechnicianConsolePage`: Caja de herramientas de telemetría de CPU/RAM/Disco y administrador de procesos remoto.
-    - `SecurityPage`: Configuración Zero Trust, clave pública Ed25519 y opciones de endurecimiento.
-    - `AuditPage`: Explorador del registro criptográfico inmutable de eventos con validación de hashes.
-  - Creación de `OpenSupport.Service`: Servicio nativo para Windows (`Microsoft.Extensions.Hosting.WindowsServices`) con servidor IPC de Named Pipes y descriptores de seguridad SDDL.
-- **Acceso Directo en Escritorio:**
-  - Creación del acceso directo oficial `OpenSupport.lnk` apuntando al binario nativo compilado `OpenSupport.App.exe`.
-- **Documentación Técnica de Ingeniería:**
-  - `AUDIT_FASE0.md`, `ARCHITECTURE.md`, `THREAT_MODEL.md`, `PROJECT_STATUS.md`, `BUILD.md`, `INSTALLATION.md`, `TESTING.md`.
+---
 
-### Modificado
-- Integración del motor criptográfico, streaming diferencial y relay desarrollados en Rust para consumo interoperable mediante FFI.
+## [0.1.0-alpha] - 2026-11-10
+
+### Added
+- **Native Desktop Client (.NET 10 / WPF-UI):**
+  - Fully native Windows 11 Fluent interface with Mica backdrop and system titlebar integration.
+  - Interactive multi-view navigation system (`Panel Principal`, `Soporte Remoto`, `Mis Dispositivos`, `Consola Técnico`, `Seguridad & Zero Trust`, `Auditoría Inmutable`, `Configuración`).
+  - Dynamic 6-digit support code generator with 15-minute expiration timer and clipboard copy.
+  - Immediate Emergency Stop button for attended session termination.
+  - Custom application branding and icon integration (`AppIcon.ico`).
+- **Cryptographic & Zero Trust Core (`crates/opensupport-crypto`):**
+  - End-to-End Encryption utilizing Noise Protocol Framework (`Noise_XX_25519_ChaChaPoly_BLAKE2s`).
+  - Device identity generation with Ed25519 signing and verification.
+  - Short Authentication String (SAS) numeric code derivation for Anti-MitM mutual authentication.
+  - In-memory key zeroization on drop with `zeroize` crate.
+- **Diagnostics & Forensic Auditing (`crates/opensupport-diagnostics` & `crates/opensupport-audit`):**
+  - Hardware telemetry collection (CPU usage, RAM allocation, NVMe storage metrics).
+  - SHA-256 hash-chained immutable audit log for all security events.
+- **File Transfer & Input Engines (`crates/opensupport-transfer` & `crates/opensupport-input`):**
+  - Chunked file transfer protocol with path traversal prevention and SHA-256 validation.
+  - Windows `SendInput` mouse and keyboard translation.
+- **Relay Server & Windows Service (`apps/opensupport-server` & `apps/opensupport-service`):**
+  - Zero-Knowledge WebSocket relay router with rate limiting and authentication hooks.
+  - Windows background service architecture with IPC Named Pipe foundation.
+- **DevSecOps & Community:**
+  - Automated CI/CD workflows for building and testing .NET and Rust components.
+  - Open source governance files: AGPL-3.0 License, Security Policy, Code of Conduct, and Contributing Guidelines.
