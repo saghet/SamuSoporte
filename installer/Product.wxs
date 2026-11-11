@@ -1,0 +1,58 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+    <Package Name="SamuSoporte"
+             Manufacturer="SamuSoporte Open Source"
+             Version="0.1.0"
+             UpgradeCode="87A6E6F2-61A2-4CF0-B212-9DF6C1E2671A">
+        
+        <MajorUpgrade DowngradeErrorMessage="Ya hay instalada una versión más reciente de SamuSoporte." />
+        <MediaTemplate EmbedCab="yes" />
+
+        <Icon Id="AppIcon.ico" SourceFile="src\OpenSupport.Desktop\AppIcon.ico" />
+        <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
+
+        <StandardDirectory Id="ProgramFiles64Folder">
+            <Directory Id="INSTALLFOLDER" Name="SamuSoporte">
+                <Component Id="MainExecutable" Bitness="always64">
+                    <File Id="SamuSoporteExe"
+                          Source="publish\desktop\SamuSoporte.exe"
+                          KeyPath="yes" />
+                    <File Id="SamuSoporteIco"
+                          Source="publish\desktop\SamuSoporte.ico" />
+                </Component>
+            </Directory>
+        </StandardDirectory>
+
+        <StandardDirectory Id="ProgramMenuFolder">
+            <Directory Id="ApplicationProgramsFolder" Name="SamuSoporte">
+                <Component Id="ApplicationShortcut" Bitness="always64">
+                    <Shortcut Id="ApplicationStartMenuShortcut"
+                              Name="SamuSoporte"
+                              Description="SamuSoporte Asistencia Remota Nativa E2EE"
+                              Target="[!SamuSoporteExe]"
+                              WorkingDirectory="INSTALLFOLDER"
+                              Icon="AppIcon.ico" />
+                    <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall" />
+                    <RegistryValue Root="HKCU" Key="Software\SamuSoporte" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+                </Component>
+            </Directory>
+        </StandardDirectory>
+
+        <StandardDirectory Id="DesktopFolder">
+            <Component Id="DesktopShortcut" Bitness="always64">
+                <Shortcut Id="ApplicationDesktopShortcut"
+                          Name="SamuSoporte"
+                          Description="SamuSoporte Asistencia Remota Nativa E2EE"
+                          Target="[!SamuSoporteExe]"
+                          WorkingDirectory="INSTALLFOLDER"
+                          Icon="AppIcon.ico" />
+                <RegistryValue Root="HKCU" Key="Software\SamuSoporte" Name="desktop_shortcut" Type="integer" Value="1" KeyPath="yes" />
+            </Component>
+        </StandardDirectory>
+
+        <Feature Id="MainFeature" Title="SamuSoporte Application" Level="1">
+            <ComponentRef Id="MainExecutable" />
+            <ComponentRef Id="ApplicationShortcut" />
+            <ComponentRef Id="DesktopShortcut" />
+        </Feature>
+    </Package>
+</Wix>
