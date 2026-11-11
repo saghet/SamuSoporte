@@ -10,11 +10,14 @@
         <Icon Id="AppIcon.ico" SourceFile="src\OpenSupport.Desktop\AppIcon.ico" />
         <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
 
+        <!-- Verificación de arquitectura de 64 bits -->
+        <Launch Condition="VersionNT64" Message="SamuSoporte requiere una versión de Windows de 64 bits (x64)." />
+
         <StandardDirectory Id="ProgramFiles64Folder">
             <Directory Id="INSTALLFOLDER" Name="SamuSoporte">
                 <Component Id="MainExecutable" Bitness="always64">
                     <File Id="SamuSoporteExe"
-                          Source="publish\desktop\SamuSoporte.exe"
+                          Source="publish\standalone\SamuSoporte.exe"
                           KeyPath="yes" />
                     <File Id="SamuSoporteIco"
                           Source="publish\desktop\SamuSoporte.ico" />
