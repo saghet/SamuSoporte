@@ -1,10 +1,14 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
     <Package Name="SamuSoporte"
              Manufacturer="SamuSoporte Open Source"
-             Version="0.1.0"
+             Version="1.0.1"
              UpgradeCode="87A6E6F2-61A2-4CF0-B212-9DF6C1E2671A">
         
-        <MajorUpgrade DowngradeErrorMessage="Ya hay instalada una versión más reciente de SamuSoporte." />
+        <!-- Sobreescritura forzada y desinstalación limpia de versiones previas antes de instalar -->
+        <MajorUpgrade Schedule="afterInstallInitialize"
+                      AllowSameVersionUpgrades="yes"
+                      DowngradeErrorMessage="Ya hay instalada una versión más reciente de SamuSoporte." />
+        
         <MediaTemplate EmbedCab="yes" />
 
         <Icon Id="AppIcon.ico" SourceFile="src\OpenSupport.Desktop\AppIcon.ico" />

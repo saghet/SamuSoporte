@@ -217,14 +217,18 @@
                             </DockPanel>
                         </Border>
 
-                        <!-- Visor de Pantalla Simulada -->
-                        <Border Background="#020617" BorderBrush="#334155" BorderThickness="2" CornerRadius="8" Height="420" Margin="0,0,0,16">
+                        <!-- Visor de Pantalla Remota Nativo -->
+                        <Border Background="#020617" BorderBrush="#334155" BorderThickness="2" CornerRadius="8" Height="460" Margin="0,0,0,16">
                             <Grid>
-                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <!-- Imagen donde se renderiza el stream real de video -->
+                                <Image x:Name="RemoteDisplayImage" Stretch="Uniform" Visibility="Collapsed" />
+
+                                <!-- Pantalla de espera cuando no hay stream activo -->
+                                <StackPanel x:Name="NoStreamPlaceholder" VerticalAlignment="Center" HorizontalAlignment="Center">
                                     <ui:SymbolIcon Symbol="Desktop24" FontSize="64" Foreground="#475569" HorizontalAlignment="Center" Margin="0,0,0,12" />
                                     <TextBlock Text="Visualizador de Sesión de Escritorio Remoto" FontSize="18" FontWeight="SemiBold" Foreground="#cbd5e1" HorizontalAlignment="Center" />
-                                    <TextBlock Text="Túnel cifrado con ChaCha20-Poly1305. Esperando conexión o equipo remoto seleccionado." Foreground="#64748b" HorizontalAlignment="Center" Margin="0,6,0,16" />
-                                    <ui:Button Appearance="Primary" Content="Iniciar Transmisión de Prueba Local" HorizontalAlignment="Center" Click="ActionFeedback_Click" Tag="Visualizador listo con Desktop Duplication API y hardware encoder." />
+                                    <TextBlock x:Name="RemoteStreamStatusText" Text="Túnel cifrado con ChaCha20-Poly1305. Esperando conexión remota..." Foreground="#64748b" HorizontalAlignment="Center" Margin="0,6,0,16" />
+                                    <ui:Button Appearance="Primary" Content="Iniciar Transmisión de Prueba Local" HorizontalAlignment="Center" Click="StartLocalScreenTest_Click" />
                                 </StackPanel>
                             </Grid>
                         </Border>

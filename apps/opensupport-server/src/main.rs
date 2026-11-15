@@ -8,7 +8,7 @@ use axum::{
     Router,
 };
 use futures::{SinkExt, StreamExt};
-use opensupport_core::protocol::SignalMessage;
+use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
     net::SocketAddr,
@@ -21,10 +21,54 @@ type Tx = mpsc::UnboundedSender<Message>;
 
 #[derive(Default, Clone)]
 pub struct ServerState {
-    /// Mapeo de Device ID en formato Hex a canal de envío
+    /// Mapeo de Device ID o Support Code a canal de envío
     clients: Arc<Mutex<HashMap<String, Tx>>>,
-    /// Mapeo de Sesión ID (String) a participantes (Iniciador Hex, Respondedor Hex)
+    /// Mapeo de Sesión ID a participantes (Iniciador, Respondedor)
     sessions: Arc<Mutex<HashMap<String, (String, Option<String>)>>>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(tag = "type")]
+pub enum RelayMessage {
+    Register {
+        device_id: String,
+        timestamp: Option<i64>,
+    },
+    SessionRequest {
+        session_id: String,
+        from_device: String,
+        to_device: String,
+        sas_code: Option<String>,
+        timestamp: Option<i64>,
+    },
+    SessionResponse {
+        session_id: String,
+        from_device: String,
+        to_device: String,
+        accepted: bool,
+        reason: Option<String>,
+    },
+    VideoFrame {
+        session_id: String,
+        from_device: String,
+        to_device: String,
+        data_base64: String,
+    },
+    InputEvent {
+        session_id: String,
+        from_device: String,
+        to_device: String,
+        event_type: i32,
+        x: i32,
+        y: i32,
+        data: i32,
+    },
+    SessionTermination {
+        session_id: String,
+        from_device: String,
+        to_device: String,
+        reason: Option<String>,
+    },
 }
 
 #[tokio::main]
@@ -38,14 +82,14 @@ async fn main() {
         .with_state(state);
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
-    info!("OpenSupport Rendezvous & Blind Relay Server escuchando en {}", addr);
+    info!("SamuSoporte Blind Relay Server escuchando en {}", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
 
 async fn health_handler() -> &'static str {
-    "OK - OpenSupport Server 1.0 (Zero-Knowledge Relay)"
+    "OK - SamuSoporte Blind Relay Server 1.0.1 (Noise E2EE Ready)"
 }
 
 async fn ws_handler(
@@ -59,9 +103,8 @@ async fn handle_socket(socket: WebSocket, state: ServerState) {
     let (mut sender, mut receiver) = socket.split();
     let (tx, mut rx) = mpsc::unbounded_channel();
 
-    let mut current_device_id: Option<String> = None;
+    let mut registered_device_id: Option<String> = None;
 
-    // Tarea encargada de enviar paquetes al WebSocket
     let send_task = tokio::spawn(async move {
         while let Some(msg) = rx.recv().await {
             if sender.send(msg).await.is_err() {
@@ -70,157 +113,82 @@ async fn handle_socket(socket: WebSocket, state: ServerState) {
         }
     });
 
-    // Procesar mensajes entrantes del cliente
     while let Some(Ok(msg)) = receiver.next().await {
         if let Message::Text(text) = msg {
-            match serde_json::from_str::<SignalMessage>(&text) {
-                Ok(signal) => match signal {
-                    SignalMessage::SessionRequest {
-                        session_id,
-                        from_device,
-                        to_device,
-                        ephemeral_public_key,
-                        requested_permissions,
+            if let Ok(relay_msg) = serde_json::from_str::<RelayMessage>(&text) {
+                match relay_msg {
+                    RelayMessage::Register { device_id, .. } => {
+                        let clean_id = device_id.replace(' ', "").to_lowercase();
+                        info!("Cliente registrado: {} (normalizado: {})", device_id, clean_id);
+                        registered_device_id = Some(clean_id.clone());
+                        state.clients.lock().unwrap().insert(clean_id, tx.clone());
+                    }
+                    RelayMessage::SessionRequest {
+                        ref session_id,
+                        ref from_device,
+                        ref to_device,
+                        ..
                     } => {
-                        let from_hex = from_device.to_hex();
-                        let to_hex = to_device.to_hex();
-                        current_device_id = Some(from_hex.clone());
+                        let clean_to = to_device.replace(' ', "").to_lowercase();
+                        let clean_from = from_device.replace(' ', "").to_lowercase();
+                        registered_device_id = Some(clean_from.clone());
+                        state.clients.lock().unwrap().insert(clean_from.clone(), tx.clone());
 
-                        // Registrar cliente
-                        state
-                            .clients
-                            .lock()
-                            .unwrap()
-                            .insert(from_hex.clone(), tx.clone());
-
-                        // Registrar sesión
-                        state
-                            .sessions
-                            .lock()
-                            .unwrap()
-                            .insert(session_id.to_string(), (from_hex.clone(), Some(to_hex.clone())));
-
-                        info!(
-                            "Solicitud de sesión {} de {} para {}",
-                            session_id, from_hex, to_hex
+                        state.sessions.lock().unwrap().insert(
+                            session_id.clone(),
+                            (clean_from.clone(), Some(clean_to.clone())),
                         );
 
-                        // Enrutar al target si está conectado
-                        let target_tx = state.clients.lock().unwrap().get(&to_hex).cloned();
+                        info!("Solicitud de sesión {} de {} hacia {}", session_id, clean_from, clean_to);
+
+                        let target_tx = state.clients.lock().unwrap().get(&clean_to).cloned();
                         if let Some(target) = target_tx {
-                            let forward_msg = SignalMessage::SessionRequest {
-                                session_id,
-                                from_device,
-                                to_device,
-                                ephemeral_public_key,
-                                requested_permissions,
-                            };
-                            let _ = target.send(Message::Text(serde_json::to_string(&forward_msg).unwrap()));
+                            let _ = target.send(Message::Text(text.clone()));
                         } else {
-                            warn!("Target {} no conectado actualmente", to_hex);
+                            warn!("Destino {} no conectado en el relay", clean_to);
+                            let reject_msg = serde_json::json!({
+                                "type": "SessionResponse",
+                                "session_id": session_id,
+                                "from_device": clean_to,
+                                "to_device": clean_from,
+                                "accepted": false,
+                                "reason": "El equipo destino no está conectado o el código es incorrecto."
+                            });
+                            let _ = tx.send(Message::Text(reject_msg.to_string()));
                         }
                     }
-                    SignalMessage::SessionResponse {
-                        session_id,
+                    RelayMessage::SessionResponse {
+                        ref to_device,
+                        ref from_device,
                         accepted,
-                        ephemeral_public_key,
-                        granted_permissions,
-                        reason,
+                        ..
                     } => {
-                        let session_info = state
-                            .sessions
-                            .lock()
-                            .unwrap()
-                            .get(&session_id.to_string())
-                            .cloned();
+                        let clean_to = to_device.replace(' ', "").to_lowercase();
+                        info!("Respuesta de sesión de {} hacia {}: accepted={}", from_device, clean_to, accepted);
 
-                        if let Some((initiator_hex, _)) = session_info {
-                            let initiator_tx = state.clients.lock().unwrap().get(&initiator_hex).cloned();
-                            if let Some(target) = initiator_tx {
-                                let forward_msg = SignalMessage::SessionResponse {
-                                    session_id,
-                                    accepted,
-                                    ephemeral_public_key,
-                                    granted_permissions,
-                                    reason,
-                                };
-                                let _ = target.send(Message::Text(serde_json::to_string(&forward_msg).unwrap()));
-                            }
+                        let target_tx = state.clients.lock().unwrap().get(&clean_to).cloned();
+                        if let Some(target) = target_tx {
+                            let _ = target.send(Message::Text(text.clone()));
                         }
                     }
-                    SignalMessage::RelayPayload {
-                        session_id,
-                        payload,
-                    } => {
-                        // Enrutamiento Ciego (Zero-Knowledge Relay): el servidor no descifra la carga útil
-                        let session_info = state
-                            .sessions
-                            .lock()
-                            .unwrap()
-                            .get(&session_id.to_string())
-                            .cloned();
-
-                        if let Some((initiator_hex, Some(responder_hex))) = session_info {
-                            let sender_id = current_device_id.as_deref().unwrap_or("");
-                            let dest_hex = if sender_id == initiator_hex {
-                                responder_hex
-                            } else {
-                                initiator_hex
-                            };
-
-                            let dest_tx = state.clients.lock().unwrap().get(&dest_hex).cloned();
-                            if let Some(target) = dest_tx {
-                                let forward = SignalMessage::RelayPayload {
-                                    session_id,
-                                    payload,
-                                };
-                                let _ = target.send(Message::Text(serde_json::to_string(&forward).unwrap()));
-                            }
+                    RelayMessage::VideoFrame { ref to_device, .. }
+                    | RelayMessage::InputEvent { ref to_device, .. }
+                    | RelayMessage::SessionTermination { ref to_device, .. } => {
+                        let clean_to = to_device.replace(' ', "").to_lowercase();
+                        let target_tx = state.clients.lock().unwrap().get(&clean_to).cloned();
+                        if let Some(target) = target_tx {
+                            let _ = target.send(Message::Text(text.clone()));
                         }
                     }
-                    SignalMessage::IceCandidate {
-                        session_id,
-                        candidate,
-                    } => {
-                        let session_info = state
-                            .sessions
-                            .lock()
-                            .unwrap()
-                            .get(&session_id.to_string())
-                            .cloned();
-
-                        if let Some((initiator_hex, Some(responder_hex))) = session_info {
-                            let sender_id = current_device_id.as_deref().unwrap_or("");
-                            let dest_hex = if sender_id == initiator_hex {
-                                responder_hex
-                            } else {
-                                initiator_hex
-                            };
-
-                            let dest_tx = state.clients.lock().unwrap().get(&dest_hex).cloned();
-                            if let Some(target) = dest_tx {
-                                let forward = SignalMessage::IceCandidate {
-                                    session_id,
-                                    candidate,
-                                };
-                                let _ = target.send(Message::Text(serde_json::to_string(&forward).unwrap()));
-                            }
-                        }
-                    }
-                    SignalMessage::SessionTermination { session_id, reason } => {
-                        info!("Sesión {} terminada: {}", session_id, reason);
-                        state.sessions.lock().unwrap().remove(&session_id.to_string());
-                    }
-                },
-                Err(e) => {
-                    error!("Error deserializando SignalMessage: {:?}", e);
                 }
             }
         }
     }
 
-    send_task.abort();
-    if let Some(dev_id) = current_device_id {
+    if let Some(dev_id) = registered_device_id {
+        info!("Cliente desconectado: {}", dev_id);
         state.clients.lock().unwrap().remove(&dev_id);
     }
+
+    send_task.abort();
 }
